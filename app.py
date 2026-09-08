@@ -138,6 +138,7 @@ def display_circuit_tools(qc, run_simulation=True):
             col1, col2 = st.columns(2)
 
             with col1:
+
                 st.metric(
                     "Original Depth",
                     qc.depth()
@@ -149,6 +150,7 @@ def display_circuit_tools(qc, run_simulation=True):
                 )
 
             with col2:
+
                 st.metric(
                     "Transpiled Depth",
                     transpiled_qc.depth()
@@ -187,11 +189,12 @@ def display_circuit_tools(qc, run_simulation=True):
 
             try:
 
-                # The algorithms other than QFT already
-                # contain measurements.
+                # Create a copy so the original circuit
+                # remains unchanged.
                 measured_circuit = qc.copy()
 
-                # QFT does not contain measurements.
+                # QFT and other circuits without classical
+                # bits need measurement added.
                 if measured_circuit.num_clbits == 0:
 
                     measured_circuit.measure_all()
@@ -221,7 +224,7 @@ def display_circuit_tools(qc, run_simulation=True):
 
                 st.dataframe(
                     results_df,
-                    use_container_width=True,
+                    width="stretch",
                     hide_index=True
                 )
 
@@ -239,7 +242,7 @@ def display_circuit_tools(qc, run_simulation=True):
 
                 st.pyplot(
                     fig,
-                    use_container_width=True
+                    width="stretch"
                 )
 
             except Exception as e:
@@ -378,9 +381,11 @@ elif algorithm == "Simon's Algorithm":
         )
     )
 
-    if secret and all(
-        bit in "01" for bit in secret
-    ) and "1" in secret:
+    if (
+        secret
+        and all(bit in "01" for bit in secret)
+        and "1" in secret
+    ):
 
         qc = simon_circuit(
             secret
@@ -469,7 +474,7 @@ elif algorithm == "Complexity Comparison":
 
     st.dataframe(
         df,
-        use_container_width=True,
+        width="stretch",
         hide_index=True
     )
 
